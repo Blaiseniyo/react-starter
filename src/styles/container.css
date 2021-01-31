@@ -1,0 +1,53 @@
+.container{
+    width: 80%;
+    margin: auto;
+}
+
+.separator{
+    margin-top: 40px;
+}
+
+.article{
+    border: 1px solid #ccc;
+    box-shadow:2px 2px 6px 0px rgba(0, 0, 0,0.3);
+    border-radius: 3px;
+    text-align: center;
+    margin-top: 40px;
+}
+.comment{
+    border: 1px solid #ccc;
+    box-shadow:2px 2px 6px 0px rgba(0, 0, 0,0.3);
+    border-radius: 3px;
+    margin-bottom: 20px;
+    padding: 20px;
+    margin-top: 50px;
+}
+h3{
+    border-bottom: 1px solid #CFC7C7 ;
+}
+input[type=text/email], input[type=password] {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+.form-container{
+    width: 80%;
+    margin: auto;
+    padding: 70px;
+    position: relative;
+    
+}
+button {
+    display:block;
+    background-color: rgb(4, 74, 102);
+    color: white;
+    padding: 14px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 70px;
+}
