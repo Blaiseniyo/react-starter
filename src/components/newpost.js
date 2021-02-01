@@ -11,9 +11,6 @@ class posts extends Component{
         let form=document.querySelector('form'); 
         console.log(form);
         const bodyFormData = new FormData(form);
-        bodyFormData.set('title',document.getElementById('title').value)
-        bodyFormData.set('body',document.getElementById('content').value)
-        bodyFormData.append('coverImage',document.getElementById('coverImage').value)
         console.log(bodyFormData)
         axios.post('https://capstone-project-rest-api.herokuapp.com/api/articles/',
             bodyFormData
@@ -25,11 +22,12 @@ class posts extends Component{
           })
           .then(res=>{
               console.log(res)
+              this.props.history.push("/");
           })
           
     }
     render(){
-
+        console.log(this.props.token)
         return(
             <div className="container">
                  <form className="col s6"  onSubmit={this.handleSubmit}>

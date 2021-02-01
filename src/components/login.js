@@ -17,17 +17,10 @@ class Login extends Component{
             password:e.target.value
         })
     }
-    handleSubmit=(e)=>{
+    handleSubmit= async(e)=>{
         e.preventDefault()
-        //console.log(this.state)
-        // axios.post('https://capstone-project-rest-api.herokuapp.com/api/user/login', this.state)
-        // .then(res=>{
-        //     this.setState({
-        //         token:res.data.token
-        //     })
-        //     console.log(this.state);
-        // })
-        this.props.logIn(this.state);
+        await this.props.logIn(this.state);
+        this.props.history.push('/');
     }
     render(){
         return(

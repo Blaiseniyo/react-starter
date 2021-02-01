@@ -3,6 +3,7 @@ import "../styles/container.css";
 import axios from "axios";
 import deletePost from '../helpers/deletePost';
 import {connect} from 'react-redux';
+import {Link} from 'react-router-dom';
 class Post extends Component{
     state={
         post:null,
@@ -11,9 +12,9 @@ class Post extends Component{
 
     componentDidMount(){
         const id = this.props.match.params.post_id;
+        console.log(this.props.token)
         axios.get(`https://capstone-project-rest-api.herokuapp.com/api/articles/${id}`)
         .then(res=>{
-            console.log(res.data)
             this.setState({
                 post:res.data.post,
                 comments:res.data.comments
@@ -24,7 +25,6 @@ class Post extends Component{
     handleDelete = async(e)=>{
         const id=this.state.post._id;
         const token =this.props.token;
-        console.log(token);
         await deletePost(id,token);
         this.props.history.push('/');
     }
@@ -35,7 +35,7 @@ class Post extends Component{
                 <h1>{this.state.post.title}</h1>
                 <p>{this.state.post.body}</p>
                 <div className="btnn" key="btn">
-                    <button className="update">update</button>
+                   <Link to={`/posts/update/${this.state.post._id}`}><button className="update">update</button></Link>
                     <button className="delete" onClick={this.handleDelete}>delete</button>
                 </div>
             </div>
