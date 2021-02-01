@@ -7,14 +7,20 @@ class posts extends Component{
 
     }
      handleSubmit=(e)=>{
-         e.preventDefault();
-        axios.post('https://capstone-project-rest-api.herokuapp.com/api/articles/', {
-            title:document.getElementById('title').value,
-            body:document.getElementById('content').value,
-            coverImage:document.getElementById('picture').value
-          }, {
+        e.preventDefault();
+        let form=document.querySelector('form'); 
+        console.log(form);
+        const bodyFormData = new FormData(form);
+        bodyFormData.set('title',document.getElementById('title').value)
+        bodyFormData.set('body',document.getElementById('content').value)
+        bodyFormData.append('coverImage',document.getElementById('coverImage').value)
+        console.log(bodyFormData)
+        axios.post('https://capstone-project-rest-api.herokuapp.com/api/articles/',
+            bodyFormData
+          ,{
             headers: {
-              'Authorization': `Bearer ${this.props.token}` 
+              'Authorization': `Bearer ${this.props.token}`,
+              'Content-Type': 'multipart/form-data' 
             }
           })
           .then(res=>{
@@ -29,19 +35,19 @@ class posts extends Component{
                  <form className="col s6"  onSubmit={this.handleSubmit}>
                     <div className="row">
                         <div className="input-field col s12">
-                            <input id="title" type="text" className="validate"  />
+                            <input id="title" type="text" name="title" className="validate"  />
                             <label htmlFor="title">Title</label>
                         </div>
                     </div>
                     <div className="row">
                         <div className="input-field col s12">
                             <label htmlFor="content">Content</label>
-                            <textarea id="content" cols="30" rows="10" className="validate" ></textarea>
+                            <textarea id="content" cols="30" rows="10" name="body" className="validate" ></textarea>
                         </div>
                     </div>
                     <div className="row">
                     <div className="input-field col s12">
-                        <input type="file" name="" id="picture"/>
+                        <input type="file" name="coverImage" id="coverImage"/>
                         <label htmlFor="picture">Picture</label>
                     </div>
                 </div>

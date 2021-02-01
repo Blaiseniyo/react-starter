@@ -1,7 +1,8 @@
 import React,{Component} from 'react';
 import "../styles/container.css";
 import axios from "axios";
-
+import deletePost from '../helpers/deletePost';
+import {connect} from 'react-redux';
 class Post extends Component{
     state={
         post:null,
@@ -19,12 +20,24 @@ class Post extends Component{
             })
         })
     }
+
+    handleDelete = async(e)=>{
+        const id=this.state.post._id;
+        const token =this.props.token;
+        console.log(token);
+        await deletePost(id,token);
+        this.props.history.push('/');
+    }
     render(){
         console.log(this.state.comments)
        const response = this.state.post?(
-            <div className="article">
+            <div className="article" key={this.state.post._id}>
                 <h1>{this.state.post.title}</h1>
                 <p>{this.state.post.body}</p>
+                <div className="btnn" key="btn">
+                    <button className="update">update</button>
+                    <button className="delete" onClick={this.handleDelete}>delete</button>
+                </div>
             </div>
             
         ):( 
@@ -37,8 +50,8 @@ class Post extends Component{
         const commentsList=comments.length ?(
             comments.map(comment=>{
                 return(
-                    <div className="comment">
-                        <h1>{comment.name}</h1>
+                    <div className="comment" key={comment._id}>
+                        <h6>{comment.name}</h6>
                         <p>{comment.comment}</p>
                     </div>
                 )
@@ -49,11 +62,17 @@ class Post extends Component{
         return(
             <div className="container">
                 {response}
-                <h3>Comments</h3>
+                <h5 key="comment">Comments</h5>
                 {commentsList}
             </div>
         )
     }
 }
 
-export default Post;
+const mapStateToPropos=(state)=>{
+    return{
+        token:state.token
+    }
+}
+
+export default connect(mapStateToPropos)(Post);

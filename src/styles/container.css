@@ -22,7 +22,7 @@
     padding: 20px;
     margin-top: 50px;
 }
-h3{
+h5{
     border-bottom: 1px solid #CFC7C7 ;
 }
 input[type=text/email], input[type=password] {
@@ -45,9 +45,24 @@ button {
     display:block;
     background-color: rgb(4, 74, 102);
     color: white;
-    padding: 14px;
-    margin: 8px 0;
+    padding: 5px;
+    margin: 8px 16px;
     border: none;
     cursor: pointer;
     width: 70px;
+}
+.btnn{
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+    
+}
+.update{
+    background-color: rgb(4, 74, 102);
+}
+
+.delete{
+    background-color: #b50012;
 }
