@@ -1,31 +1,19 @@
 import React,{Component} from 'react';
-import axios from 'axios';
 import '../styles/container.css';
 import {Link} from 'react-router-dom';
-class home extends Component{
-    state={
-        posts:[]
-    }
-    componentDidMount(){
-        axios.get('https://capstone-project-rest-api.herokuapp.com/api/articles/')
-        .then(posts=>{
-            this.setState({
-                posts:posts.data
-            })
-        })
-        .catch(()=>{
-            console.log("opss something went wrong!! we could not get the data you requested for :)")
-            return(
-                <div className="center">opss something went wrong!! we could not get the data you requested for :)</div>
-
-            )
-        })
-    }
+import {connect} from 'react-redux';
+import getPosts from '../actions/getPosts';
+import cleanPost from '../actions/cleanpost'
+class Home extends Component{
     
+    componentDidMount(){
+        this.props.posts();
+        this.props.clean();
+    }
     render(){
-        const {posts}= this.state
-        const postList= posts.length ? (
-            posts.map(post=>{
+        const Posts= this.props.Posts.posts
+        const postList= Posts.length ? (
+            Posts.map(post=>{
                 return(
                     <div className="post card separator" key={post._id}>
                         <Link to={"post/" + post._id}>
@@ -47,4 +35,16 @@ class home extends Component{
         )
     }
 }
-export default home;
+const mapStateToPropos=(state)=>{
+    return {
+        Posts:state.posts
+    }
+}
+const mapDispatchTOPropos=(dispatch)=>{
+    return {
+        posts:()=>dispatch(getPosts()),
+        clean:()=>dispatch(cleanPost())
+    }
+}
+export {Home}
+export default connect(mapStateToPropos,mapDispatchTOPropos)(Home);

@@ -2,6 +2,7 @@ import React,{Component} from 'react';
 import '../styles/container.css';
 import {connect} from 'react-redux';
 import loginUser from '../actions/loginAction';
+import {Redirect} from 'react-router-dom'
 class Login extends Component{
     state={
         email:"",
@@ -19,10 +20,12 @@ class Login extends Component{
     }
     handleSubmit= async(e)=>{
         e.preventDefault()
-        await this.props.logIn(this.state);
+        await this.props.logIn(this.state); 
         this.props.history.push('/');
     }
     render(){
+        console.log(this.props.token)
+        if(this.props.token) return <Redirect to='/'/>
         return(
             <div className="container">
                 <form onSubmit={this.handleSubmit} id='form'>
@@ -38,11 +41,16 @@ class Login extends Component{
         )
     }
 }
-
+const mapStateToPropos=(state)=>{
+    return{
+        token:state.auth.token
+    }
+}
 const mapDispatchTOPropos=(dispatch)=>{
     return {
         logIn:(creds)=> dispatch(loginUser(creds))
     }
 }
 
-export default connect(null,mapDispatchTOPropos)(Login);
+export {Login}
+export default connect(mapStateToPropos,mapDispatchTOPropos)(Login);

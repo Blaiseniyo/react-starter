@@ -1,43 +1,40 @@
 import React,{Component} from 'react';
-import "../styles/container.css";
-import axios from "axios";
-import deletePost from '../helpers/deletePost';
+import Comments from "./comments";
 import {connect} from 'react-redux';
 import {Link} from 'react-router-dom';
+import getComments from '../actions/getComments';
+import deletePost from '../actions/deletePost';
+import getpost from '../actions/getpost';
+import Cookies from 'universal-cookie';
+import "../styles/container.css";
 class Post extends Component{
-    state={
-        post:null,
-        comments:[]
-    }
-
+    
     componentDidMount(){
         const id = this.props.match.params.post_id;
-        console.log(this.props.token)
-        axios.get(`https://capstone-project-rest-api.herokuapp.com/api/articles/${id}`)
-        .then(res=>{
-            this.setState({
-                post:res.data.post,
-                comments:res.data.comments
-            })
-        })
+        this.props.getpost(id);
     }
 
     handleDelete = async(e)=>{
-        const id=this.state.post._id;
+        const id = this.props.match.params.post_id;
         const token =this.props.token;
-        await deletePost(id,token);
+        await this.props.delete(id,token);
         this.props.history.push('/');
     }
     render(){
-        console.log(this.state.comments)
-       const response = this.state.post?(
-            <div className="article" key={this.state.post._id}>
-                <h1>{this.state.post.title}</h1>
-                <p>{this.state.post.body}</p>
-                <div className="btnn" key="btn">
-                   <Link to={`/posts/update/${this.state.post._id}`}><button className="update">update</button></Link>
-                    <button className="delete" onClick={this.handleDelete}>delete</button>
-                </div>
+        const cookies = new Cookies();
+        const token=cookies.get('reactBlog'); 
+        const post= this.props.Posts.post ? (this.props.Posts.post.post):(null);
+        const btn=(this.props.token || token) && post?(
+            <div className="btnn" key="btn">
+                <Link to={`/posts/update/${post._id}`}><button className="update">update</button></Link>
+                <button className="delete" onClick={this.handleDelete} id={post._id}>delete</button>
+            </div>
+        ):(null)
+       const response = post?(
+            <div className="article" key={post._id}>
+                <h1>{post.title}</h1>
+                <p>{post.body}</p>
+                {btn}
             </div>
             
         ):( 
@@ -45,25 +42,11 @@ class Post extends Component{
                 <h4>post loading...</h4>
             </div>
         )
-
-        let comments = this.state.comments;
-        const commentsList=comments.length ?(
-            comments.map(comment=>{
-                return(
-                    <div className="comment" key={comment._id}>
-                        <h6>{comment.name}</h6>
-                        <p>{comment.comment}</p>
-                    </div>
-                )
-            })
-        ):(
-            null
-        );
         return(
             <div className="container">
                 {response}
                 <h5 key="comment">Comments</h5>
-                {commentsList}
+                <Comments/>
             </div>
         )
     }
@@ -71,8 +54,18 @@ class Post extends Component{
 
 const mapStateToPropos=(state)=>{
     return{
-        token:state.token
+        token:state.auth.token,
+        Posts:state.posts
     }
 }
 
-export default connect(mapStateToPropos)(Post);
+const mapDispatchTOPropos=(dispatch)=>{
+    return{
+        comments:(id)=> dispatch(getComments(id)),
+        delete:(id,token)=> dispatch(deletePost(id,token)),
+        getpost:(id)=> dispatch(getpost(id))
+    }
+}
+
+export {Post};
+export default connect(mapStateToPropos,mapDispatchTOPropos)(Post);
